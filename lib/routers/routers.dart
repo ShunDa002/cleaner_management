@@ -9,5 +9,6 @@ class AppPage{
         GetPage(name: "/", page: () => const Tabs()),
         GetPage(name: "/updatestatus", page: () => const UpdateStatusPage()),
         GetPage(name: "/cleanerdashboard", page: () => const CleanerDashboardPage()),
+        // add more routes here
       ];
 }
