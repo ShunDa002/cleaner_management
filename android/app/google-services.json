@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "851608879309",
+    "project_id": "cleaner-management-flutter",
+    "storage_bucket": "cleaner-management-flutter.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:851608879309:android:847c63efc14790fce3e984",
+        "android_client_info": {
+          "package_name": "com.example.cleaner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNEaXV0r-QPQgA5y9BaQZIIHRXFzMUMMo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:851608879309:android:9774845a2ee62ddee3e984",
+        "android_client_info": {
+          "package_name": "com.example.cleaner_management"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNEaXV0r-QPQgA5y9BaQZIIHRXFzMUMMo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
