@@ -5,14 +5,26 @@ import 'package:intl/intl.dart'; // Add this import for date formatting
 
 import '../../providers/dashboard_provider.dart';
 
+final DashboardProvider dashboardProvider = Get.find<DashboardProvider>();
+
 class CleanerDashboardPage extends StatelessWidget {
-  const CleanerDashboardPage({super.key});
+  CleanerDashboardPage({super.key});
+
+  /*  Future<double> loadAverageActivities() async {
+    // Ensure booking data is loaded
+    double averageActivities =
+        await dashboardProvider.calculateAverageActivitiesPerDay();
+    return averageActivities;
+  } */
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Cleaner Dashboard"),
+          title: const Text(
+            "Cleaner Dashboard",
+            style: TextStyle(fontSize: 20),
+          ),
         ),
         body: Column(
           children: [
@@ -26,13 +38,13 @@ class CleanerDashboardPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                           const SizedBox(
-                            height: 20,
+                            height: 25,
                           ),
                           const Text(
                             'Last 7 Days Earnings',
                             style: TextStyle(
                               color: Colors.blue,
-                              fontSize: 32,
+                              fontSize: 22,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 2,
                             ),
@@ -61,32 +73,42 @@ class CleanerDashboardPage extends StatelessWidget {
                   children: [
                     Container(
                         padding: EdgeInsets.all(8.0),
-                        margin: EdgeInsets.all(20.0),
+                        margin: EdgeInsets.all(10.0),
                         decoration: BoxDecoration(
                             color: Colors.blue[50],
                             borderRadius: BorderRadius.circular(5.0)),
-                        child: Column(
-                          children: [
-                            Text("Average Order",
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            Divider(),
-                            Text("xxx orders"),
-                          ],
-                        )),
+                        child: FutureBuilder(
+                            future: dashboardProvider
+                                .calculateAverageActivitiesPerDay(),
+                            builder: (context, snapshot) {
+                              return Column(children: [
+                                Text("Average Cleaning",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                Divider(),
+                                Text('${snapshot.data.toString()} orders'),
+                              ]);
+                            })),
                     Container(
                         padding: EdgeInsets.all(8.0),
-                        margin: EdgeInsets.all(20.0),
+                        margin: EdgeInsets.all(10.0),
                         decoration: BoxDecoration(
                             color: Colors.blue[50],
                             borderRadius: BorderRadius.circular(5.0)),
-                        child: Column(
-                          children: [
-                            Text("Average Cleaning Time",
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            Divider(),
-                            Text("xxx hours"),
-                          ],
-                        )),
+                        child: FutureBuilder(
+                            future:
+                                dashboardProvider.calculateAverageTimeTaken(),
+                            builder: (context, snapshot) {
+                              return Column(
+                                children: [
+                                  Text("Average Working Time",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                  Divider(),
+                                  Text(snapshot.data ?? 'Not found'),
+                                ],
+                              );
+                            })),
                   ],
                 )),
             Expanded(
@@ -100,8 +122,6 @@ class CleanerDashboardPage extends StatelessWidget {
 
 class _LineChart extends StatelessWidget {
   _LineChart({super.key});
-
-  final DashboardProvider dashboardProvider = Get.find<DashboardProvider>();
 
   @override
   Widget build(BuildContext context) {

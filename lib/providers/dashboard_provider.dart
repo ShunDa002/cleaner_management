@@ -12,6 +12,120 @@ class DashboardProvider extends GetxController {
   // Firestore bookings collection reference
   final CollectionReference bookingsCollection =
       FirebaseFirestore.instance.collection('bookings');
+  final CollectionReference activitiesCollection =
+      FirebaseFirestore.instance.collection('activities');
+
+  // Calculate average time taken per activity in last 7 days
+  Future<String> calculateAverageTimeTaken() async {
+    try {
+      // Get the current timestamp and calculate 7 days ago
+      final now = Timestamp.now();
+      final sevenDaysAgo = Timestamp.fromMillisecondsSinceEpoch(
+          now.millisecondsSinceEpoch - Duration(days: 7).inMilliseconds);
+
+      // Firestore query to fetch activities in the last 7 days with overallStatus "completed"
+      final snapshot = await FirebaseFirestore.instance
+          .collection('activities')
+          .where('overallStatus', isEqualTo: 'completed')
+          .where('startTime', isGreaterThanOrEqualTo: sevenDaysAgo)
+          .where('startTime', isLessThanOrEqualTo: now)
+          .get();
+
+      // Parse documents and calculate time taken for each activity
+      int totalTimeTakenInMinutes =
+          0; // Total time taken for all activities in minutes
+      int totalActivities =
+          0; // Count of activities with valid start and end times
+
+      for (var doc in snapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>;
+
+        // Check if both startTime and endTime exist
+        if (data['startTime'] != null && data['endTime'] != null) {
+          final startTime = (data['startTime'] as Timestamp).toDate();
+          final endTime = (data['endTime'] as Timestamp).toDate();
+
+          // Calculate the time difference in minutes
+          final timeTakenInMinutes = endTime.difference(startTime).inMinutes;
+
+          // Add to total time taken and increment activity count
+          totalTimeTakenInMinutes += timeTakenInMinutes;
+          totalActivities++;
+        }
+      }
+
+      // Calculate average time taken per activity
+      final double averageTimeTakenInMinutes =
+          totalActivities > 0 ? totalTimeTakenInMinutes / totalActivities : 0.0;
+
+      // Convert average time to hours and minutes
+      final int hours = averageTimeTakenInMinutes ~/ 60;
+      final int minutes = (averageTimeTakenInMinutes % 60).toInt();
+
+      // Format the output as a string
+      final String averageTimeFormatted = "$hours hrs $minutes mins";
+
+      print("Total activities: $totalActivities");
+      print("Total time taken: $totalTimeTakenInMinutes minutes");
+      print("Average time taken per activity: $averageTimeFormatted");
+
+      return averageTimeFormatted;
+    } catch (error) {
+      print("Error calculating average time taken: $error");
+      return "Error";
+    }
+  }
+
+  // Calculate average activities per day in last 7 days
+  Future<int> calculateAverageActivitiesPerDay() async {
+    try {
+      // Get current timestamp and calculate 7 days ago using Firestore's Timestamp
+      final now = Timestamp.now();
+      final sevenDaysAgo = Timestamp.fromMillisecondsSinceEpoch(
+          now.millisecondsSinceEpoch - Duration(days: 7).inMilliseconds);
+
+      // Firestore query to fetch activities in the last 7 days with overallStatus "completed"
+      final snapshot = await activitiesCollection
+          .where('overallStatus', isEqualTo: 'completed')
+          .where('startTime', isGreaterThanOrEqualTo: sevenDaysAgo)
+          .where('startTime', isLessThanOrEqualTo: now)
+          .get();
+
+      // Parse documents
+      final List<Map<String, dynamic>> activities = snapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+
+      // Group activities by day
+      Map<String, int> dailyCounts = {};
+      for (var activity in activities) {
+        // Extract startTime as a DateTime from Firestore Timestamp
+        final startTime = (activity['startTime'] as Timestamp).toDate();
+        final dayKey = DateTime(startTime.year, startTime.month, startTime.day);
+
+        dailyCounts[dayKey.toIso8601String()] =
+            (dailyCounts[dayKey.toIso8601String()] ?? 0) + 1;
+      }
+
+      // Calculate average
+      final int totalDays = 7;
+      final int totalActivities =
+          dailyCounts.values.fold(0, (sum, count) => sum + count);
+
+      final double average = totalActivities / totalDays;
+
+      final int upperCeilingAverage = average.ceil();
+
+      print("Total activities: $totalActivities");
+      print("Average activities per day: $average");
+      print("Upper ceiling average: $upperCeilingAverage");
+
+      return upperCeilingAverage;
+    } catch (error) {
+      print("Error calculating average activities: $error");
+      return 0;
+    }
+  }
 
   // Fetch bookings summary from Firestore
   Future<void> getBookingSummary() async {

@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import './pages/tabs.dart';
 import './routers/routers.dart';
 import './binding/controller_binding.dart';
+import '../../providers/user_provider.dart';
+import './pages/users/login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +29,9 @@ class MyApp extends StatelessWidget {
       initialRoute: "/", // default route
       defaultTransition: Transition.rightToLeft,
       getPages: AppPage.routes,
-      home: const Tabs(),
+      home: Obx(() {
+        return Get.find<UserProvider>().user != null ? Tabs() : Login();
+      }),
       initialBinding: ControllerBinding(),
     );
   }

@@ -14,7 +14,7 @@ class Tabs extends StatefulWidget {
 
 class _TabsState extends State<Tabs> {
   // int _selectedIndex = 0;
-  int _selectedIndex = 3;
+  int _selectedIndex = 4;
   final List<Widget> _pages = [
     const HomePage(),
     ActivityPage(),

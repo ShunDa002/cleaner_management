@@ -6,8 +6,6 @@ Here you define what the app can do.
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../domains/booking_domain.dart';
-
 class BookingProvider extends GetxController {
   var isLoading = true.obs; // Make it reactive
   var bookingList = <Map<String, dynamic>>[].obs; // Use a reactive list

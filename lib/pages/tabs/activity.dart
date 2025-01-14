@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../providers/booking_provider.dart';
 import '../../providers/activity_provider.dart';
+import '../../providers/user_provider.dart';
 
 class ActivityPage extends StatelessWidget {
   ActivityPage({super.key}) {
@@ -90,20 +91,26 @@ class ActivityPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final UserProvider userProvider = Get.find<UserProvider>();
+
     return Obx(() {
-      loadBookingData();
-      return Center(
-          child: FutureBuilder(
-              future: _initBookingList(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView(
-                    children: snapshot.data ?? [],
-                  );
-                } else {
-                  return Text("No data available");
-                }
-              }));
+      if (userProvider.userLogin.role == "cleaner") {
+        loadBookingData();
+        return Center(
+            child: FutureBuilder(
+                future: _initBookingList(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView(
+                      children: snapshot.data ?? [],
+                    );
+                  } else {
+                    return Text("No data available");
+                  }
+                }));
+      } else {
+        return Text("You are ${userProvider.userLogin.role}"); // Return an empty container or any other widget
+      }
     });
   }
 }

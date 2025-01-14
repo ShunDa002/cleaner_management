@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../dashboard/cleaner_dashboard.dart';
-
+// import '../dashboard/cleaner_dashboard.dart';
 import '../../providers/dashboard_provider.dart';
+import '../../providers/user_provider.dart';
 
 class DashboardPage extends StatelessWidget {
   DashboardPage({super.key});
@@ -15,75 +15,86 @@ class DashboardPage extends StatelessWidget {
     // Fetch data when the widget is built
     dashboardProvider.getBookingSummary();
 
-    return Center(
-      child: CleanerDashboardPage(),
-      /* child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
+    final UserProvider userProvider = Get.find<UserProvider>();
+
+    return GetX<UserProvider>(builder: (userProvider) {
+      if (userProvider.userLogin.role == "cleaner") {
+        return Center(
+          // child: CleanerDashboardPage(),
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              OutlinedButton(onPressed: () {}, child: Text("Last 7 days")),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  OutlinedButton(onPressed: () {}, child: Text("Last 7 days")),
+                ],
+              ),
+              Container(
+                  height: 100,
+                  padding: EdgeInsets.all(8.0),
+                  margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  decoration: BoxDecoration(
+                      color: Colors.blue[50],
+                      borderRadius: BorderRadius.circular(5.0)),
+                  child: Column(
+                    children: [
+                      Text("Total Cleaned House",
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold)),
+                      Divider(),
+                      Obx(() => Text(
+                            '${dashboardProvider.totalBookings.value} units',
+                            style: TextStyle(fontSize: 20),
+                          )),
+                    ],
+                  )),
+              Container(
+                  height: 100,
+                  padding: EdgeInsets.all(8.0),
+                  margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  decoration: BoxDecoration(
+                      color: Colors.blue[50],
+                      borderRadius: BorderRadius.circular(5.0)),
+                  child: Column(
+                    children: [
+                      Text("Total Earning",
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold)),
+                      Divider(),
+                      Obx(() => Text(
+                            'RM ${dashboardProvider.totalEarnings.value.toStringAsFixed(2)}',
+                            style: TextStyle(fontSize: 20),
+                          )),
+                    ],
+                  )),
+              SizedBox(
+                height: 40,
+                width: 300,
+                child: ElevatedButton.icon(
+                  icon: Icon(Icons.chevron_right_outlined),
+                  onPressed: () {
+                    Get.toNamed("/cleanerdashboard", arguments: {
+                      "title": "I am cleaner dashboard",
+                      "id": 1
+                    });
+                  },
+                  label: Text("View more ..."),
+                  iconAlignment: IconAlignment.end,
+                ),
+              ),
+              SizedBox(
+                height: 50,
+              )
             ],
           ),
-          Container(
-              height: 100,
-              padding: EdgeInsets.all(8.0),
-              margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-              decoration: BoxDecoration(
-                  color: Colors.blue[50],
-                  borderRadius: BorderRadius.circular(5.0)),
-              child: Column(
-                children: [
-                  Text("Total Cleaned House",
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                  Divider(),
-                  Obx(() => Text(
-                        '${dashboardProvider.totalBookings.value} units',
-                        style: TextStyle(fontSize: 20),
-                      )),
-                ],
-              )),
-          Container(
-              height: 100,
-              padding: EdgeInsets.all(8.0),
-              margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-              decoration: BoxDecoration(
-                  color: Colors.blue[50],
-                  borderRadius: BorderRadius.circular(5.0)),
-              child: Column(
-                children: [
-                  Text("Total Earning",
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                  Divider(),
-                  Obx(() => Text(
-                        'RM ${dashboardProvider.totalEarnings.value.toStringAsFixed(2)}',
-                        style: TextStyle(fontSize: 20),
-                      )),
-                ],
-              )),
-          SizedBox(
-            height: 40,
-            width: 300,
-            child: ElevatedButton.icon(
-              icon: Icon(Icons.chevron_right_outlined),
-              onPressed: () {
-                Get.toNamed("/cleanerdashboard",
-                    arguments: {"title": "I am cleaner dashboard", "id": 1});
-              },
-              label: Text("View more ..."),
-              iconAlignment: IconAlignment.end,
-            ),
-          ),
-          SizedBox(
-            height: 50,
-          )
-        ],
-      ), */
-    );
+        );
+      }
+      return Center(
+        child: Text("You are ${userProvider.userLogin.role}"),
+      );
+    });
   }
 }
 
