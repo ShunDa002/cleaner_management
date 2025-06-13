@@ -7,8 +7,8 @@ import 'package:cleaner_management/pages/tabs.dart';
 class AppPage{
   static final routes= [
         GetPage(name: "/", page: () => const Tabs()),
-        GetPage(name: "/updatestatus", page: () => const UpdateStatusPage()),
-        GetPage(name: "/cleanerdashboard", page: () => const CleanerDashboardPage()),
-        // add more routes here
+        GetPage(name: "/updatestatus", page: () => UpdateStatusPage()),
+        GetPage(name: "/cleanerdashboard", page: () => CleanerDashboardPage()),
+        // add more routes here 
       ];
 }

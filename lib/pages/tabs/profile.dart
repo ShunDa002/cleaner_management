@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../../providers/user_provider.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -8,10 +11,22 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final UserProvider userProvider = Get.find<UserProvider>();
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Profile Page'),
-    );
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        GetX<UserProvider>(builder: (userProvider) {
+          return Text(userProvider.userLogin.role);
+        }),
+        ElevatedButton(
+            onPressed: () {
+              userProvider.signOut();
+            },
+            child: Text("Sign Out")),
+      ],
+    ));
   }
 }

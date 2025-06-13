@@ -13,19 +13,36 @@ class Tabs extends StatefulWidget {
 }
 
 class _TabsState extends State<Tabs> {
-  int _selectedIndex = 0;
-  final List<Widget> _pages = const [
-    HomePage(),
+  // int _selectedIndex = 0;
+  int _selectedIndex = 4;
+  final List<Widget> _pages = [
+    const HomePage(),
     ActivityPage(),
-    BookingPage(),
+    const BookingPage(),
     DashboardPage(),
-    ProfilePage()
+    const ProfilePage()
   ];
+  final List<Widget> _appBarTitle = [
+    const Text("Home"),
+    const Text("Start New Activity"),
+    const Text("Create New Booking"),
+    const Text("View Dashboard"),
+    const Text("Profile")
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter App'),
+        title: _appBarTitle[_selectedIndex],
+        backgroundColor: Colors.blue[600],
+        shadowColor: Colors.black26,
+        elevation: 10.0,
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 15.0,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
